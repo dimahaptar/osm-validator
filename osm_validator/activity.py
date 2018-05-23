@@ -1,98 +1,57 @@
-# from . import models
+import models, time
 
 
+async def get_all_activity  (app, client):
+    '''
+    getting data of all activity
+    '''
+    async with app.db.acquire() as conn:
+        await select_all = select([Activity.__table__.c.id,
+                                   Activity.__table__.c.name]).\
+                           where(Activity.__table__.c.user_id == client)
+        await result = conn.execute(select_all)
 
 
+async def get_activity_using_id(app, client, id):
+      '''
+      data of some activity using its id
+      '''
+      with app.db.acquire() as conn:
+          await select_one = select([Activity.__table__.c.id,
+                               Activity.__table__.c.name]).\
+                               where(
+                               and_(Activity.__table__.c.id == id\
+                                    Activity.__table__.c.id == client)
+          await result = conn.execute(select_all)
 
 
+async def create_activity(app, client_id, a_name ):
+     '''
+         adding activity in the database
+     '''
+     with app.db.acquire() as conn:
+         await insert_one = Actity.__table__.insert().values(name = a_name,
+                            data_created = time.time())
 
-    #
-    # def get_data_using_id(self, id):
-    #     '''
-    #        data of a specific activity using its id
-    #     '''
-    #
-    #         'SELECT * FROM Activity WHERE id=' + str(id))
-    #
-    #
-    #
-    # def get_number_of_activity(self, id):
-    #     '''
-    #         number of activity stored by a specific user
-    #     '''
-    #     'SELECT COUNT(activity) FROM notes WHERE user_id=' + str(id))
-    #
-    #
-    #
-    #
-    # def get_data(self, id):
-    #     '''
-    #         getting data of all activity
-    #     '''
-    #    ('SELECT * FROM activity')
-    #
-    #
-    #
-    # def create(self):
-    #     '''
-    #         adding activity into the database
-    #     '''
-    #     "INSERT INTO activity() VALUES (?, ?, ?, ?, ?)",
-    #
-    #
-    # def update_name(self, id):
-    #     '''
-    #         update activity into the database
-    #     '''
-    #    "UPDATE activity SET"
-    #
-    #
-    # def delete(self, id):
-    #     '''
-    #            deleting a specific activity using its id
-    #     '''
-    #     "DELETE FROM activity WHERE id=" + str(id))
-            
+         await result = conn.execute(insert_one)
 
-def main():
-        menu = None
-        while menu != "Q":
 
-            print\
-                (
-                    """
-                    Menu
-                    
-                    Q - Quit
-                    L - List of activities with id
-                    G - Get one activity on id
-                    C - Create
-                    U - Update 
-                    D - Delete
-                    """
-                )
-            menu = input("Enter the sign ")
+async def update_name(app, client_id, a_name,id ):
+     '''
+         update activity in the database
+     '''
+     with app.db.acquire() as conn:
+         await update_one = Actity.__table__.update().\
+                            values(name = a_name).\
+                            where(Activity.__table__.c.id == id))
+         await result = conn.execute(update_one)
 
-            if menu == "Q":
-                print("Quit")
-            elif menu == "L":
-                a = input('')
-                print('List')
-                # Activity.()
-            elif menu == "G":
-                print('a')
-                # Activity.
-            elif menu == "C":
-                print('a')
-                # Activity.
-            elif menu == "U":
-                print('a')
-                # Activity.
-            elif menu == "D":
-                print('a')
-                # Activity.
 
-            else:
-                print("No such signs")
-
-main()
+ def delete(app, client_id, id ):
+     '''
+     deleting a specific activity using its id
+     '''
+    with app.db.acquire() as conn:
+         await delete_one = Actity.__table__.delete().\
+                            where(Activity.__table__.c.id == id))
+         await result = conn.execute(delete_one)
